@@ -23,20 +23,23 @@ def fetch_and_analyze(payload: FetchRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=502, detail=str(exc))
 
     saved_articles = []
+    seen_urls = set()
     for item in raw_articles:
-        if not item["url"]:
+        url = item.get("url")
+        if not url or url in seen_urls:
             continue
-        if db.query(Article).filter(Article.url == item["url"]).first():
+        if db.query(Article).filter(Article.url == url).first():
             continue
 
-        label, score = ml_service.analyze(item["content"] or item["title"])
+        seen_urls.add(url)
+        label, score = ml_service.analyze(item.get("content") or item.get("title") or "")
 
         article = Article(
-            title=item["title"],
-            source=item["source"],
-            url=item["url"],
-            content=item["content"],
-            published_at=item["published_at"],
+            title=item.get("title") or "Untitled",
+            source=item.get("source"),
+            url=url,
+            content=item.get("content"),
+            published_at=item.get("published_at"),
             sentiment_label=label,
             sentiment_score=score,
         )
