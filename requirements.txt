@@ -6,5 +6,6 @@ pydantic-settings
 python-dotenv
 requests
 vaderSentiment
+apscheduler
 pytest
 httpx

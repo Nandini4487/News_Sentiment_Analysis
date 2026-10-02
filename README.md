@@ -154,6 +154,7 @@ Then open **http://127.0.0.1:8000/docs** for the interactive API docs (Swagger U
 | POST   | `/api/v1/fetch`        | Fetch articles for a search query, score sentiment, save new ones   |
 | GET    | `/api/v1/articles`     | List saved articles, optional `sentiment` filter (positive/negative/neutral) |
 | GET    | `/api/v1/analytics`    | Aggregate counts by sentiment + average sentiment score              |
+| GET    | `/api/v1/analytics/trend` | Daily average sentiment and article count trend (`?query=...&days=7`) |
 
 **Example request body for `/fetch`:**
 ```json
@@ -162,6 +163,15 @@ Then open **http://127.0.0.1:8000/docs** for the interactive API docs (Swagger U
   "page_size": 10
 }
 ```
+
+## Scheduler
+
+Background news fetching and sentiment analysis is handled via APScheduler.
+- Configurable settings in `.env`:
+  - `SCHEDULER_ENABLED`: Enable/disable background scheduler (`True` by default)
+  - `SCHEDULER_INTERVAL_HOURS`: Interval between runs in hours (`1` by default)
+  - `SCHEDULER_TOPICS`: Comma-separated list or JSON array of topics (defaults to `technology,business,science`)
+- Automatically skips duplicate URLs and scores sentiment with VADER.
 
 ## Running tests
 

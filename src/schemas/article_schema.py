@@ -36,3 +36,13 @@ class AnalyticsResponse(BaseModel):
     negative_count: int
     neutral_count: int
     average_sentiment_score: float
+
+
+class DailyTrendResponse(BaseModel):
+    date: str
+    article_count: int
+    average_sentiment: float
+    average_sentiment_score: Optional[float] = None
+    positive_count: Optional[int] = 0
+    negative_count: Optional[int] = 0
+    neutral_count: Optional[int] = 0
